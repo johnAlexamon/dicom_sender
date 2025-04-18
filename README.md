@@ -16,7 +16,7 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 
 For Windows users who don't want to install Python, a standalone executable is available:
 
-1. Download the `DICOM_Sender_v1.0.0.zip` file from this repository
+1. Download the `DICOM_Sender_v1.1.0.zip` file from this repository
 2. Extract the ZIP file to any location on your computer
 3. Run `DICOM_Sender.exe` directly - no installation needed!
 
