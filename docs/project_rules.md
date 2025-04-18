@@ -43,7 +43,8 @@ alexamon-dicom-sender/
 - When creating a new release:
   1. Increment version number in `src/__init__.py`
   2. Create a git tag with that version number
-  3. Build the ZIP package and place it in `releases/`
+  3. Build the ZIP package with PyInstaller and place it in `releases/`
+  4. See `docs/release_process.md` for detailed instructions
 
 ### Log Files (`logs/`)
 - All log files must be stored in the `logs/` directory
@@ -65,6 +66,7 @@ alexamon-dicom-sender/
 - Required docs:
   - `structure.md` - Project structure overview
   - `project_rules.md` - This file
+  - `release_process.md` - Step-by-step release process
   - Any additional feature-specific documentation
 
 ## Git Guidelines
@@ -91,6 +93,9 @@ alexamon-dicom-sender/
 ## Building and Packaging
 
 - Use PyInstaller for creating executable packages
+  - Follow instructions in `docs/release_process.md`
+  - Required command: `python -m PyInstaller --noconfirm --onedir --windowed --add-data "lib;lib" --name "Alexamon_DICOM_Sender" main.py`
 - Store build configuration in `file_version_info.txt`
-- Place final ZIP files in the `releases/` directory
-- Update README with release notes for each version 
+- Place final ZIP files in the `releases/` directory using the naming convention
+- Update README and CHANGELOG with release notes for each version
+- **REQUIREMENT**: Every release MUST include a properly built ZIP package 
