@@ -12,7 +12,17 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 - Detailed logging
 - Modern UI using CustomTkinter
 
-## Requirements
+## Quick Start - Standalone Executable
+
+For Windows users who don't want to install Python, a standalone executable is available:
+
+1. Download the `DICOM_Sender_v1.0.0.zip` file from this repository
+2. Extract the ZIP file to any location on your computer
+3. Run `DICOM_Sender.exe` directly - no installation needed!
+
+The ZIP package contains everything needed to run the application, including all dependencies and libraries. The only prerequisite is having Java Runtime Environment (JRE) 8 or higher installed on your system.
+
+## Requirements (for source code users)
 
 - Python 3.7 or higher
 - Java Runtime Environment (JRE) 8 or higher
@@ -21,7 +31,7 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
   - pydicom - For DICOM file handling (metadata only)
 - dcm4che Java library (see installation instructions)
 
-## Installation
+## Installation (from source)
 
 1. Clone the repository:
    ```bash
@@ -42,9 +52,8 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 ## Usage
 
 1. Run the application:
-   ```bash
-   python dicom_sender.py
-   ```
+   - If using the standalone executable: double-click `DICOM_Sender.exe`
+   - If using source code: `python dicom_sender.py`
 
 2. Configure the PACS server settings:
    - Server IP
