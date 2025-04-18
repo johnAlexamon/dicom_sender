@@ -47,4 +47,8 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 
 ## Logging
 
-The application creates detailed logs in the application directory with timestamps. Log files follow the naming pattern: `dicom_sender_YYYYMMDD_HHMMSS.log` 
+The application creates detailed logs in the application directory with timestamps. Log files follow the naming pattern: `dicom_sender_YYYYMMDD_HHMMSS.log`
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
