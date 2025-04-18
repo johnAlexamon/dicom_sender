@@ -38,5 +38,8 @@ DICOM Sender is a simple application for sending DICOM files to PACS servers. It
 ## Licensing
 This software is distributed under the MIT License. See LICENSE file for details.
 
+The dcm4che libraries used in this application are licensed under the Mozilla Public License Version 1.1.
+For more information, visit: https://github.com/dcm4che/dcm4che/blob/master/LICENSE.txt
+
 ## Support
 For support, please create an issue on the project's GitHub repository. 

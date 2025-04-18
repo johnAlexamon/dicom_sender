@@ -61,4 +61,7 @@ The application creates detailed logs in the application directory with timestam
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+The dcm4che libraries used in this project are licensed under the Mozilla Public License Version 1.1.
+See [dcm4che's license](https://github.com/dcm4che/dcm4che/blob/master/LICENSE.txt) for details. 
