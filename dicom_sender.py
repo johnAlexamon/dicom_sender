@@ -1,3 +1,10 @@
+"""
+Alexamon DICOM Sender
+Copyright © 2025 Alexamon. All rights reserved.
+
+A DICOM file transfer application using dcm4che Java libraries for PACS connectivity.
+"""
+
 import customtkinter as ctk
 from tkinter import filedialog
 import pydicom  # Still needed for basic DICOM metadata reading
@@ -119,8 +126,8 @@ class DicomSenderApp(ctk.CTk):
         self.config = self.load_config()
 
         # Configure window
-        self.title("DICOM Sender")
-        self.geometry("600x500")
+        self.title("Alexamon DICOM Sender")
+        self.geometry("600x530")  # Slightly taller to accommodate copyright notice
         
         # Configure grid
         self.grid_columnconfigure(1, weight=1)
@@ -172,8 +179,12 @@ class DicomSenderApp(ctk.CTk):
         # Log file path label
         self.log_label = ctk.CTkLabel(self, text=f"Log file: {log_filename}")
         self.log_label.grid(row=9, column=0, columnspan=2, padx=10, pady=5)
+        
+        # Copyright notice
+        self.copyright_label = ctk.CTkLabel(self, text="© 2025 Alexamon. All rights reserved.", font=("Arial", 10))
+        self.copyright_label.grid(row=10, column=0, columnspan=2, padx=10, pady=5)
 
-        logging.info("DICOM Sender application started")
+        logging.info("Alexamon DICOM Sender application started")
 
     def load_config(self):
         try:

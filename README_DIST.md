@@ -1,7 +1,7 @@
-# DICOM Sender
+# Alexamon DICOM Sender
 
 ## Overview
-DICOM Sender is a simple application for sending DICOM files to PACS servers. It provides an easy-to-use interface for configuring server connection settings and sending DICOM images.
+Alexamon DICOM Sender is a simple application for sending DICOM files to PACS servers. It provides an easy-to-use interface for configuring server connection settings and sending DICOM images.
 
 ## Requirements
 - Windows 7/8/10/11
@@ -10,7 +10,7 @@ DICOM Sender is a simple application for sending DICOM files to PACS servers. It
 ## How to Use
 
 ### 1. Start the Application
-- Double-click on `DICOM_Sender.exe` to start the application
+- Double-click on `Alexamon_DICOM_Sender.exe` to start the application
 
 ### 2. Configure Server Settings
 - Enter the PACS server IP address, port, and AE Title in the respective fields
@@ -42,4 +42,6 @@ The dcm4che libraries used in this application are licensed under the Mozilla Pu
 For more information, visit: https://github.com/dcm4che/dcm4che/blob/master/LICENSE.txt
 
 ## Support
-For support, please create an issue on the project's GitHub repository. 
+For support, please contact Alexamon or create an issue on the project's GitHub repository.
+
+Copyright © 2025 Alexamon. All rights reserved. 
