@@ -10,11 +10,15 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 - Configurable server settings (IP, Port, AE Title)
 - Save default settings
 - Detailed logging
+- Modern UI using CustomTkinter
 
 ## Requirements
 
 - Python 3.7 or higher
 - Required Python packages are listed in `requirements.txt`
+  - CustomTkinter - Modern UI library based on Tkinter
+  - pydicom - For DICOM file handling
+  - pynetdicom - For DICOM networking
 
 ## Installation
 
