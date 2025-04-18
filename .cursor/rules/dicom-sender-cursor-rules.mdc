@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+Please limit code files to no more than 300 lines of code.
+
+# Release rules
+When I ask for a new release please increment the version number and also create a new tag in github with that version number.
