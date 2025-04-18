@@ -20,7 +20,7 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/dicom_sender.git
+   git clone https://github.com/johnAlexamon/dicom_sender.git
    cd dicom_sender
    ```
 
