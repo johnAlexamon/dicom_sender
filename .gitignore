@@ -36,6 +36,7 @@ coverage.xml
 # Logs
 logs/*.log
 *.log
+dicom_sender_20250418_173450.log  # Specific active log file
 
 # Releases folder (for storing zip files locally)
 releases/
