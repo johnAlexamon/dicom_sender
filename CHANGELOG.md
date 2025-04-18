@@ -2,6 +2,23 @@
 
 All notable changes to the Alexamon DICOM Sender will be documented in this file.
 
+## [1.3.0] - 2025-04-22
+
+### Added
+- Folder selection functionality for sending multiple DICOM files
+- Progress tracking UI with status updates during file sending
+- Improved error handling and reporting for batch operations
+
+### Changed
+- Refactored application to use dcm4che Java library more effectively
+- Enhanced user interface for better workflow
+- Improved DICOM file detection in folders
+
+### Fixed
+- Resolved issues with file path handling on Windows
+- Fixed progress display during multiple file transfers
+- Improved error messages for common failure scenarios
+
 ## [1.2.0] - 2025-04-18
 
 ### Added
