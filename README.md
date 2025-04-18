@@ -1,52 +1,50 @@
 # DICOM Sender
 
-A simple GUI application for sending DICOM files to a DICOM server using C-STORE.
+A Python-based GUI application for sending DICOM files to PACS servers with DICOM echo functionality.
 
 ## Features
 
-- Modern, user-friendly interface
-- Select DICOM files from your local system
-- Configure server IP, port, and AE Title
-- Send DICOM files using C-STORE
-- Real-time status updates
+- Send DICOM files to PACS servers
+- DICOM Echo functionality to test server connectivity
+- Support for JPEG 2000 compressed DICOM files
+- Configurable server settings (IP, Port, AE Title)
+- Save default settings
+- Detailed logging
 
-## Setup
+## Requirements
 
-1. Install Python 3.8 or higher if you haven't already
-2. Install the required dependencies:
+- Python 3.7 or higher
+- Required Python packages are listed in `requirements.txt`
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/dicom_sender.git
+   cd dicom_sender
    ```
+
+2. Install dependencies:
+   ```bash
    pip install -r requirements.txt
    ```
 
-## Running the Application
-
-Simply run:
-```
-python dicom_sender.py
-```
-
 ## Usage
 
-1. Enter the DICOM server details:
-   - Server IP address
-   - Port number
-   - AE Title (Application Entity Title)
-2. Click "Select DICOM File" to choose a DICOM file from your system
-3. Click "Send DICOM" to transmit the file to the server
-4. The status label will show the result of the operation
-
-## Creating a Standalone Executable
-
-To create a standalone executable that doesn't require Python installation:
-
-1. Install PyInstaller:
-   ```
-   pip install pyinstaller
+1. Run the application:
+   ```bash
+   python dicom_sender.py
    ```
 
-2. Create the executable:
-   ```
-   pyinstaller --onefile --windowed dicom_sender.py
-   ```
+2. Configure the PACS server settings:
+   - Server IP
+   - Port
+   - AE Title
 
-The executable will be created in the `dist` directory. 
+3. Use "DICOM Echo" to test the connection
+
+4. Select a DICOM file and click "Send DICOM" to transmit
+
+## Logging
+
+The application creates detailed logs in the application directory with timestamps. Log files follow the naming pattern: `dicom_sender_YYYYMMDD_HHMMSS.log` 
