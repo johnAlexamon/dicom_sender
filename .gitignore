@@ -34,7 +34,11 @@ coverage.xml
 *.cover
 
 # Logs
+logs/*.log
 *.log
+
+# Releases folder (for storing zip files locally)
+releases/
 
 # Temporary files
 temp_dcm4che/
@@ -56,6 +60,7 @@ ENV/
 
 # Distribution package (include only the final zip)
 DICOM_Sender_Package/
+Alexamon_DICOM_Sender_Package/
 
 # Windows
 Thumbs.db
