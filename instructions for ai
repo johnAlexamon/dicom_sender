@@ -1,0 +1,12 @@
+dcm4che has jar files and i want to use this storescu command from it. 
+Here is a link to it https://github.com/dcm4che/dcm4che/blob/master/dcm4che-tool/dcm4che-tool-storescu/README.md 
+
+import subprocess
+
+def send_dicom_using_dcm4che(file_path, host, port, aet):
+    cmd = [
+        "java", "-jar", "path/to/dcm4che/lib/storescu.jar",
+        "-c", f"{aet}@{host}:{port}",
+        file_path
+    ]
+    return subprocess.run(cmd, capture_output=True, text=True) 

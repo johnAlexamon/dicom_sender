@@ -7,6 +7,7 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 - Send DICOM files to PACS servers via dcm4che's storescu
 - DICOM Echo functionality to test server connectivity via dcm4che's echoscu
 - Support for all DICOM transfer syntaxes supported by dcm4che
+- **DICOM tag modification** - Edit DICOM tags before sending (Patient ID, Patient Name, etc.)
 - Configurable server settings (IP, Port, AE Title)
 - Save default settings
 - Detailed logging
@@ -51,6 +52,12 @@ The ZIP package contains everything needed to run the application, including all
    - Place required JAR files in the `lib/dcm4che/lib` directory
    - See `lib/dcm4che/README.md` for detailed instructions
 
+4. Set up the DICOM tag modification utility:
+   ```bash
+   scripts/setup_dcm4che_modifier.bat
+   ```
+   This will validate your dcm4che setup and compile the Java utility needed for tag modification.
+
 ## Usage
 
 1. Run the application:
@@ -64,7 +71,38 @@ The ZIP package contains everything needed to run the application, including all
 
 3. Use "DICOM Echo" to test the connection
 
-4. Select a DICOM file or folder and click "Send DICOM" to transmit
+4. Select a DICOM file or folder 
+
+5. (Optional) Modify DICOM tags:
+   - Check the tags you want to modify in the DICOM Tag Modification section
+   - Enter new values for each tag
+   - The modifications will be applied to all selected files during sending
+
+6. Click "Send DICOM" to transmit
+
+## DICOM Tag Modification
+
+The application supports modifying DICOM tags directly using the dcm4che3 Java library. This is a more robust approach than command-line tag modification:
+
+- Uses dcm4che's native Attributes API for proper tag handling
+- Preserves file meta information
+- Respects correct Value Representation (VR) for each tag
+
+To test tag modification from the command line:
+
+```bash
+python scripts/test_dicom_tag_modification.py --file path/to/dicom.dcm --tag "0010,0020=ANONYMOUS" --tag "0010,0010=ANONYMOUS^PATIENT"
+```
+
+To test both tag modification and sending in one operation:
+
+```bash
+python scripts/test_modify_and_send.py --file path/to/dicom.dcm --ip 127.0.0.1 --port 11112 --ae-title ORTHANC --tag "0010,0020=ANONYMOUS" --tag "0010,0010=ANONYMOUS^PATIENT"
+```
+
+See the [Scripts Documentation](scripts/README.md) for more details about available test scripts.
+
+The tag modification feature creates a temporary modified copy of the DICOM file before sending, leaving your original files untouched.
 
 ## Project Structure
 
@@ -90,4 +128,39 @@ The application creates detailed logs in the `logs` directory with timestamps. L
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 The dcm4che libraries used in this project are licensed under the Mozilla Public License Version 1.1.
-See [dcm4che's license](https://github.com/dcm4che/dcm4che/blob/master/LICENSE.txt) for details. 
+See [dcm4che's license](https://github.com/dcm4che/dcm4che/blob/master/LICENSE.txt) for details.
+
+## Testing and Utility Scripts
+
+The project includes several utility scripts for testing and working with DICOM files:
+
+### Included Scripts
+
+1. **Tag Modification Testing**
+   ```bash
+   python scripts/test_dicom_tag_modification.py --file path/to/dicom.dcm --tag "00100020=TEST_ID" --tag "00100010=TEST^PATIENT"
+   ```
+
+2. **Modify and Send Testing**
+   ```bash
+   python scripts/test_modify_and_send.py --file path/to/dicom.dcm --ip 127.0.0.1 --port 11112 --ae-title ORTHANC --tag "00100020=TEST_ID"
+   ```
+
+3. **DICOM Anonymization**
+   ```bash
+   python scripts/anonymize_dicom.py --folder path/to/dicom_folder --output-dir anonymized_data --randomize
+   ```
+
+4. **Batch Processing**
+   ```bash
+   python scripts/batch_processor.py --folder dicom_files --modify-and-send --ip 127.0.0.1 --port 11112 --ae-title ORTHANC --tag "00100020=TEST_ID"
+   ```
+
+These scripts are useful for:
+- Testing PACS connectivity
+- Preparing anonymized datasets
+- Processing large volumes of DICOM files
+- Testing tag modification features
+- Validating dcm4che integration
+
+See the [Scripts Documentation](scripts/README.md) for detailed information on using these utilities. 

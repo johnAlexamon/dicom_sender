@@ -2,6 +2,26 @@
 
 All notable changes to the Alexamon DICOM Sender will be documented in this file.
 
+## [1.4.0] - 2025-04-25
+
+### Added
+- Advanced DICOM tag modification using dcm4che3's Attributes API
+- Java-based DicomModifier utility for robust tag editing
+- Support for modifying PatientID and PatientName tags before sending
+- Test script for verifying tag modification functionality
+- Setup utility for Java component compilation
+
+### Changed
+- Tag modifications now use proper DICOM API instead of command-line arguments
+- Improved tag value handling with correct Value Representation (VR)
+- Enhanced documentation for tag modification features
+- Proper preservation of file meta information during tag modifications
+
+### Fixed
+- Fixed issues with special characters in tag values
+- Improved cleanup of temporary files
+- Better error reporting for failed tag modifications
+
 ## [1.3.0] - 2025-04-22
 
 ### Added

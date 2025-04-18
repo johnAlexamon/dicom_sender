@@ -3,9 +3,14 @@ description:
 globs: 
 alwaysApply: true
 ---
-
-# Your rule content
 Please limit code files to no more than 300 lines of code.
 
 # Release rules
-When I ask for a new release please increment the version number and also create a new tag in github with that version number.
+When I ask for a new release:
+1. Increment the version number in src/__init__.py
+2. Update CHANGELOG.md with the changes
+3. Create a new tag in GitHub with that version number
+4. Build the application with PyInstaller using the exact command in docs/release_process.md
+5. Create a ZIP file in the releases directory following the naming convention Alexamon_DICOM_Sender_vX.Y.Z.zip
+
+The process must follow all steps documented in docs/release_process.md - this is mandatory for all releases.

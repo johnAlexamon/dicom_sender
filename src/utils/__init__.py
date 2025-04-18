@@ -1,3 +1,3 @@
 """
-Utility modules for Alexamon DICOM Sender
+Utility modules for the Alexamon DICOM Sender
 """ 
