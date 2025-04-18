@@ -1,14 +1,12 @@
 import customtkinter as ctk
 from tkinter import filedialog
-import pydicom
-from pynetdicom import AE, StoragePresentationContexts, VerificationPresentationContexts
-from pynetdicom.sop_class import CTImageStorage
-from pynetdicom.pdu_primitives import SCP_SCU_RoleSelectionNegotiation
+import pydicom  # Still needed for basic DICOM metadata reading
 import os
 from pathlib import Path
 import logging
 import datetime
 import json
+import subprocess
 
 # Configure logging
 log_filename = f"dicom_sender_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
@@ -20,6 +18,54 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+
+# Helper function for dcm4che storescu command
+def send_dicom_using_dcm4che(file_path, host, port, ae_title):
+    """
+    Send DICOM file using dcm4che storescu tool.
+    
+    Parameters:
+    - file_path: Path to the DICOM file
+    - host: PACS server hostname/IP
+    - port: PACS server port
+    - ae_title: AE Title of the PACS server
+    
+    Returns:
+    - subprocess.CompletedProcess object with stdout and stderr
+    """
+    # Path to dcm4che jar file - update this to your actual path
+    jar_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib", "storescu.jar")
+    
+    cmd = [
+        "java", "-jar", jar_path,
+        "-c", f"{ae_title}@{host}:{port}",
+        file_path
+    ]
+    logging.info(f"Executing command: {' '.join(cmd)}")
+    return subprocess.run(cmd, capture_output=True, text=True)
+
+# Helper function for dcm4che echoscu command
+def echo_dicom_using_dcm4che(host, port, ae_title):
+    """
+    Send DICOM echo using dcm4che echoscu tool.
+    
+    Parameters:
+    - host: PACS server hostname/IP
+    - port: PACS server port
+    - ae_title: AE Title of the PACS server
+    
+    Returns:
+    - subprocess.CompletedProcess object with stdout and stderr
+    """
+    # Path to dcm4che jar file - update this to your actual path
+    jar_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib", "echoscu.jar")
+    
+    cmd = [
+        "java", "-jar", jar_path,
+        "-c", f"{ae_title}@{host}:{port}"
+    ]
+    logging.info(f"Executing command: {' '.join(cmd)}")
+    return subprocess.run(cmd, capture_output=True, text=True)
 
 class DicomSenderApp(ctk.CTk):
     def __init__(self):
@@ -113,40 +159,27 @@ class DicomSenderApp(ctk.CTk):
 
     def send_echo(self):
         try:
-            # Initialize the Application Entity
-            ae = AE()
-            ae.requested_contexts = VerificationPresentationContexts
-
             # Get connection parameters
             ip = self.ip_entry.get()
-            port = int(self.port_entry.get())
+            port = self.port_entry.get()
             ae_title = self.ae_title_entry.get()
             logging.info(f"Attempting DICOM echo to {ip}:{port} with AE Title: {ae_title}")
 
-            # Associate with peer AE
+            # Update status
             self.status_label.configure(text="Sending DICOM echo...", text_color="orange")
-            assoc = ae.associate(ip, port, ae_title=ae_title)
             
-            if assoc.is_established:
-                logging.info("Association established successfully")
-                # Send the C-ECHO request
-                status = assoc.send_c_echo()
-                
-                if status:
-                    success_msg = "DICOM echo successful!"
-                    self.status_label.configure(text=success_msg, text_color="green")
-                    logging.info(success_msg)
-                else:
-                    error_msg = "DICOM echo failed!"
-                    self.status_label.configure(text=error_msg, text_color="red")
-                    logging.error(error_msg)
-                
-                # Release the association
-                assoc.release()
-                logging.info("Association released")
+            # Run echo command using dcm4che
+            result = echo_dicom_using_dcm4che(ip, port, ae_title)
+            
+            # Process result
+            if result.returncode == 0:
+                success_msg = "DICOM echo successful!"
+                self.status_label.configure(text=success_msg, text_color="green")
+                logging.info(success_msg)
+                logging.info(f"Echo output: {result.stdout}")
             else:
-                error_msg = "Failed to establish association with server!"
-                self.status_label.configure(text=error_msg, text_color="red")
+                error_msg = f"DICOM echo failed: {result.stderr}"
+                self.status_label.configure(text="DICOM echo failed!", text_color="red")
                 logging.error(error_msg)
 
         except Exception as e:
@@ -172,77 +205,39 @@ class DicomSenderApp(ctk.CTk):
             return
 
         try:
-            # Read DICOM file
-            logging.info(f"Reading DICOM file: {self.file_path}")
-            ds = pydicom.dcmread(self.file_path)
-            
-            # Log the original transfer syntax
-            original_syntax = ds.file_meta.TransferSyntaxUID
-            logging.info(f"Original file transfer syntax: {original_syntax}")
-
-            # List of JPEG 2000 transfer syntaxes
-            jpeg2000_syntaxes = [
-                '1.2.840.10008.1.2.4.90',  # JPEG 2000 Lossless
-                '1.2.840.10008.1.2.4.91',  # JPEG 2000 Lossy
-            ]
-
-            # Convert to Explicit VR Little Endian if using any JPEG 2000 format
-            if original_syntax in jpeg2000_syntaxes:
-                logging.info("Converting from JPEG 2000 to Explicit VR Little Endian")
-                try:
-                    # Decompress pixel data
-                    ds.decompress()
-                    # Update transfer syntax
-                    ds.file_meta.TransferSyntaxUID = '1.2.840.10008.1.2.1'  # Explicit VR Little Endian
-                    logging.info("Successfully converted to Explicit VR Little Endian")
-                except Exception as e:
-                    logging.error(f"Failed to decompress image: {str(e)}")
-                    raise
-
-            # Initialize the Application Entity
-            ae = AE()
-            
-            # Add CT Image Storage with Explicit VR Little Endian only
-            ae.add_requested_context(CTImageStorage, '1.2.840.10008.1.2.1')  # Explicit VR Little Endian
-            
-            # Get connection parameters
-            ip = self.ip_entry.get()
-            port = int(self.port_entry.get())
-            ae_title = self.ae_title_entry.get()
-            logging.info(f"Attempting to connect to {ip}:{port} with AE Title: {ae_title}")
-
-            # Associate with peer AE
-            self.status_label.configure(text="Connecting to server...", text_color="orange")
-            assoc = ae.associate(ip, port, ae_title=ae_title)
-            
-            if assoc.is_established:
-                logging.info("Association established successfully")
-                # Log accepted presentation contexts
-                for context in assoc.accepted_contexts:
-                    logging.info(f"Accepted context: {context.abstract_syntax} with transfer syntax: {context.transfer_syntax}")
-                
-                # Send the DICOM file
-                status = assoc.send_c_store(ds)
-                
-                if status:
-                    success_msg = "DICOM file sent successfully!"
-                    self.status_label.configure(text=success_msg, text_color="green")
-                    logging.info(success_msg)
-                else:
-                    error_msg = "Failed to send DICOM file!"
-                    self.status_label.configure(text=error_msg, text_color="red")
-                    logging.error(error_msg)
-                
-                # Release the association
-                assoc.release()
-                logging.info("Association released")
-            else:
-                error_msg = "Failed to establish association with server!"
+            # Basic validation - verify it's a DICOM file
+            try:
+                ds = pydicom.dcmread(self.file_path)
+                logging.info(f"Reading DICOM file: {self.file_path}")
+                logging.info(f"File transfer syntax: {ds.file_meta.TransferSyntaxUID}")
+            except Exception as e:
+                error_msg = f"Error reading DICOM file: {str(e)}"
                 self.status_label.configure(text=error_msg, text_color="red")
                 logging.error(error_msg)
-                # Log rejected presentation contexts
-                for context in assoc.rejected_contexts:
-                    logging.error(f"Rejected context: {context.abstract_syntax} with transfer syntax: {context.transfer_syntax}")
+                return
+
+            # Get connection parameters
+            ip = self.ip_entry.get()
+            port = self.port_entry.get()
+            ae_title = self.ae_title_entry.get()
+            logging.info(f"Attempting to send DICOM to {ip}:{port} with AE Title: {ae_title}")
+
+            # Update status
+            self.status_label.configure(text="Sending DICOM file...", text_color="orange")
+            
+            # Send DICOM using dcm4che
+            result = send_dicom_using_dcm4che(self.file_path, ip, port, ae_title)
+            
+            # Process result
+            if result.returncode == 0:
+                success_msg = "DICOM file sent successfully!"
+                self.status_label.configure(text=success_msg, text_color="green")
+                logging.info(success_msg)
+                logging.info(f"Send output: {result.stdout}")
+            else:
+                error_msg = f"Failed to send DICOM file: {result.stderr}"
+                self.status_label.configure(text="Failed to send DICOM file!", text_color="red")
+                logging.error(error_msg)
 
         except Exception as e:
             error_msg = f"Error: {str(e)}"
