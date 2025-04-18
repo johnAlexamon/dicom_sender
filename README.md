@@ -16,11 +16,13 @@ A Python-based GUI application for sending DICOM files to PACS servers with DICO
 
 For Windows users who don't want to install Python, a standalone executable is available:
 
-1. Download the `DICOM_Sender_v1.1.0.zip` file from this repository
+1. Download the latest release ZIP file (like `Alexamon_DICOM_Sender_v1.2.0.zip`) from the [GitHub Releases tab](https://github.com/johnAlexamon/dicom_sender/releases)
 2. Extract the ZIP file to any location on your computer
-3. Run `DICOM_Sender.exe` directly - no installation needed!
+3. Run `Alexamon_DICOM_Sender.exe` directly - no installation needed!
 
 The ZIP package contains everything needed to run the application, including all dependencies and libraries. The only prerequisite is having Java Runtime Environment (JRE) 8 or higher installed on your system.
+
+> **Note**: All official releases are published under the GitHub Releases tab. Always download the latest version for the best features and bug fixes.
 
 ## Requirements (for source code users)
 
@@ -52,8 +54,8 @@ The ZIP package contains everything needed to run the application, including all
 ## Usage
 
 1. Run the application:
-   - If using the standalone executable: double-click `DICOM_Sender.exe`
-   - If using source code: `python dicom_sender.py`
+   - If using the standalone executable: double-click `Alexamon_DICOM_Sender.exe`
+   - If using source code: `python main.py`
 
 2. Configure the PACS server settings:
    - Server IP
@@ -62,11 +64,26 @@ The ZIP package contains everything needed to run the application, including all
 
 3. Use "DICOM Echo" to test the connection
 
-4. Select a DICOM file and click "Send DICOM" to transmit
+4. Select a DICOM file or folder and click "Send DICOM" to transmit
+
+## Project Structure
+
+The project follows a standardized structure:
+
+- `src/` - Contains all source code
+- `logs/` - Contains log files
+- `releases/` - Contains release ZIP packages
+- `lib/` - Contains external libraries like dcm4che
+- `docs/` - Contains documentation
+
+For more information about the project structure and development guidelines, see:
+- [Project Structure Documentation](docs/structure.md)
+- [Project Rules](docs/project_rules.md)
+- [Release Process](docs/release_process.md)
 
 ## Logging
 
-The application creates detailed logs in the application directory with timestamps. Log files follow the naming pattern: `dicom_sender_YYYYMMDD_HHMMSS.log`
+The application creates detailed logs in the `logs` directory with timestamps. Log files follow the naming pattern: `dicom_sender_YYYYMMDD_HHMMSS.log`. These logs are useful for troubleshooting and tracking activity.
 
 ## License
 
