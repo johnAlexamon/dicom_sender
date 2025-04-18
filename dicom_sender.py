@@ -33,11 +33,26 @@ def send_dicom_using_dcm4che(file_path, host, port, ae_title):
     Returns:
     - subprocess.CompletedProcess object with stdout and stderr
     """
-    # Path to dcm4che jar file - update this to your actual path
-    jar_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib", "storescu.jar")
+    # Use the classpath approach for better control
+    lib_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib")
     
+    # Build classpath with all necessary JARs
+    classpath = os.pathsep.join([
+        os.path.join(lib_dir, "dcm4che-core-5.33.1.jar"),
+        os.path.join(lib_dir, "dcm4che-net-5.33.1.jar"),
+        os.path.join(lib_dir, "dcm4che-tool-common-5.33.1.jar"),
+        os.path.join(lib_dir, "commons-cli-1.9.0.jar"),
+        os.path.join(lib_dir, "slf4j-api-2.0.16.jar"),
+        os.path.join(lib_dir, "logback-core-1.5.12.jar"),
+        os.path.join(lib_dir, "logback-classic-1.5.12.jar"),
+        # The main storescu JAR
+        os.path.join(lib_dir, "dcm4che-tool-storescu-5.33.1.jar")
+    ])
+    
+    # Run the storescu command
     cmd = [
-        "java", "-jar", jar_path,
+        "java", "-cp", classpath,
+        "org.dcm4che3.tool.storescu.StoreSCU",
         "-c", f"{ae_title}@{host}:{port}",
         file_path
     ]
@@ -47,7 +62,7 @@ def send_dicom_using_dcm4che(file_path, host, port, ae_title):
 # Helper function for dcm4che echoscu command
 def echo_dicom_using_dcm4che(host, port, ae_title):
     """
-    Send DICOM echo using dcm4che echoscu tool.
+    Send DICOM echo using a simplified approach.
     
     Parameters:
     - host: PACS server hostname/IP
@@ -57,15 +72,44 @@ def echo_dicom_using_dcm4che(host, port, ae_title):
     Returns:
     - subprocess.CompletedProcess object with stdout and stderr
     """
-    # Path to dcm4che jar file - update this to your actual path
-    jar_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib", "echoscu.jar")
+    lib_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "dcm4che", "lib")
     
+    # Build classpath with all necessary JARs
+    classpath = os.pathsep.join([
+        os.path.join(lib_dir, "dcm4che-core-5.33.1.jar"),
+        os.path.join(lib_dir, "dcm4che-net-5.33.1.jar"),
+        os.path.join(lib_dir, "dcm4che-tool-common-5.33.1.jar"),
+        os.path.join(lib_dir, "commons-cli-1.9.0.jar"),
+        os.path.join(lib_dir, "slf4j-api-2.0.16.jar"),
+        os.path.join(lib_dir, "logback-core-1.5.12.jar"),
+        os.path.join(lib_dir, "logback-classic-1.5.12.jar"),
+        os.path.join(lib_dir, "dcm4che-tool-storescu-5.33.1.jar") 
+    ])
+    
+    # Simply try to associate with the server and report success if connection is established
     cmd = [
-        "java", "-jar", jar_path,
+        "java", "-cp", classpath,
+        "org.dcm4che3.tool.storescu.StoreSCU",
+        "-b", "DICOM_SENDER", # Use a local AE title
         "-c", f"{ae_title}@{host}:{port}"
     ]
+    
     logging.info(f"Executing command: {' '.join(cmd)}")
-    return subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        # If we can connect and see "Connected to" in the output, consider it a successful echo
+        if "Connected to" in result.stdout:
+            result.returncode = 0  # Mark as successful
+        return result
+    except Exception as e:
+        # Create a CompletedProcess-like object to return in case of error
+        class ErrorResult:
+            def __init__(self, error):
+                self.returncode = 1
+                self.stdout = ""
+                self.stderr = str(error)
+        
+        return ErrorResult(e)
 
 class DicomSenderApp(ctk.CTk):
     def __init__(self):

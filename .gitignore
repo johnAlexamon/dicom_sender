@@ -1,38 +1,65 @@
-# Python
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-build/
-develop-eggs/
+
+# Distribution / packaging
 dist/
+build/
+*.egg-info/
+*.egg
+.installed.cfg
+develop-eggs/
 downloads/
 eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
 wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+.Python
 
-# Virtual Environment
-venv/
-env/
-ENV/
+# PyInstaller
+*.manifest
+*.spec
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
 
 # Logs
 *.log
 
-# DICOM files
+# Temporary files
+temp_dcm4che/
+dcm4che.zip
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+
+# Distribution package (include only the final zip)
+DICOM_Sender_Package/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# DICOM files (don't include patient data in repo)
 *.dcm 
